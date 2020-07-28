@@ -1,0 +1,339 @@
+---
+title: "Analysis of methylation on spike-ins - CAPS data"
+author: "Zhiyuan"
+date: "3/9/2020 (last modified: `r Sys.Date()`)"
+output: 
+  prettydoc::html_pretty:
+    theme: architect
+    highlight: github
+# output: 
+#   pdf_document:
+#     latex_engine: xelatex
+#     df_print: paged
+#     number_sections: yes
+#     toc: yes
+# fontsize: "11pt"
+# keep_tex: False
+# header-includes:
+#   - \usepackage{fontspec}
+#   - \setmainfont{Arial}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(scipen = 999)
+library(ggplot2)
+```
+
+```{r read_mods}
+mods_h <- read.delim("../astair_output/spike_in_new/YL712508hm_sorted_spikein_clipOverlap_mCtoT_all.mods",as.is = T)
+mods_m <- read.delim( "../astair_output/spike_in_new/YL711505m_sorted_spikein_clipOverlap_mCtoT_all.mods",as.is = T)
+mods_f <- read.delim( "../astair_output/spike_in_new/YL708508f_sorted_spikein_clipOverlap_mCtoT_all.mods",as.is = T)
+mods_c <- read.delim( "../astair_output/spike_in_new/YL709502c_sorted_spikein_clipOverlap_mCtoT_all.mods",as.is = T)
+
+mods_list <- list(mods_m,  # tapsbeta
+                  mods_h,  # caps
+                  mods_f,  # ps
+                  mods_c)  # psc
+
+methods <- c("TAPSbeta","CAPS", "PS", "PSc")
+
+for(i in 1:4){
+  mods_list[[i]] <- mods_list[[i]][(mods_list[[i]]$MOD + mods_list[[i]]$UNMOD) > 0,]
+  colnames(mods_list[[i]])[1] <- "CHROM"
+  mods_list[[i]]$MOD_LEVEL <- as.numeric(mods_list[[i]]$MOD_LEVEL)
+}
+```
+
+```{r 2kb_spikein}
+spikein <- "2kb_2"
+tmp_sum <- data.frame(methods = methods,
+                      conversion = NA)
+for(i in 1:4){
+  mods <- mods_list[[i]]
+  tmp_mods <- mods[mods$CHROM == spikein & mods$CONTEXT == "CpG",]
+  tmp_sum$conversion[i] <- mean(tmp_mods$MOD_LEVEL[(tmp_mods$MOD + tmp_mods$UNMOD) >= 3])
+    # sum(tmp_mods$MOD)/(sum(tmp_mods$MOD) +  sum(tmp_mods$UNMOD))
+}
+df_2kb2 <- tmp_sum
+knitr::kable(df_2kb2, digits = 4, caption = "Summary of 2kb_2")
+```
+
+```{r lambda}
+spikein <- "J02459.1"
+tmp_sum <- data.frame(methods = methods,
+                      conversion = NA)
+for(i in 1:4){
+  mods <- mods_list[[i]]
+  tmp_mods <- mods[mods$CHROM == spikein & mods$CONTEXT == "CpG",]
+  # tmp_sum$conversion1[i] <- mean(tmp_mods$MOD_LEVEL) ## methods 1 calculate average
+  # tmp_sum$conversion[i] <- mean(tmp_mods$MOD_LEVEL[(tmp_mods$MOD + tmp_mods$UNMOD) >= 3])
+  tmp_sum$conversion[i] <- mean(tmp_mods$MOD_LEVEL[(tmp_mods$MOD + tmp_mods$UNMOD) >= 3])
+    # sum(tmp_mods$MOD)/( sum(tmp_mods$MOD) +  sum(tmp_mods$UNMOD))
+}
+
+df_lambda <- tmp_sum
+knitr::kable(df_lambda, digits = 5, caption = "Summary of lambda DNA")
+```
+
+```{r 144fc}
+spikein <- "144fc"
+tmp_sum <- data.frame(methods = methods,
+                      conversion_CpG = NA,
+                      conversion_CAA = NA)
+loc <- c(87, 92, 100, 110) # , 117
+
+for(i in 1:4){
+  mods <- mods_list[[i]]
+  tmp_mods <- mods[mods$CHROM == spikein & mods$END %in% loc,]
+  tmp_sum$conversion_CpG[i] <- mean(tmp_mods$MOD_LEVEL[(tmp_mods$MOD + tmp_mods$UNMOD) >= 3])
+    # sum(tmp_mods$MOD)/(sum(tmp_mods$MOD) +  sum(tmp_mods$UNMOD))
+}
+
+loc <- 117
+for(i in 1:4){
+  mods <- mods_list[[i]]
+  tmp_mods <- mods[mods$CHROM == spikein & mods$END %in% loc, , drop=FALSE]
+  tmp_sum$conversion_CAA[i] <- (tmp_mods$MOD)/((tmp_mods$MOD) + (tmp_mods$UNMOD))
+}
+
+df_144fc <- tmp_sum
+knitr::kable(df_144fc, digits = 4, caption = "Summary of 144fc spike in containing four modified CpGs and one modified CAA.")
+```
+
+```{r N5mCNN, eval=FALSE}
+spikein <- "synthetic_N5mCNN"
+
+tmp_sum <- data.frame(methods = methods,
+                      conversion_site1 = NA,
+                      conversion_site2 = NA)
+loc <- 51
+for(i in 1:4){
+  mods <- mods_list[[i]]
+  tmp_mods <- mods[mods$CHROM == spikein & mods_m$END %in% loc,]
+  tmp_sum$conversion_site1[i] <- tmp_mods$MOD_LEVEL
+}
+
+loc <- 111
+for(i in 1:4){
+  mods <- mods_list[[i]]
+  tmp_mods <- mods[mods$CHROM == spikein & mods_m$END %in% loc,]
+  tmp_sum$conversion_site2[i] <- tmp_mods$MOD_LEVEL
+}
+
+df_N5mCNN <- tmp_sum
+knitr::kable(df_N5mCNN, digits = 6, caption = "Summary of N5mCNN containing one 5mC and one 5hmC")
+```
+
+```{r unmodified}
+spikein <- "unmodified_2kb"
+
+tmp_sum <- data.frame(methods = rep(methods, each = 3),
+                      context = rep(c("CpG","CHG","CHH"), 4),
+                      conversion = NA)
+
+for(i in 1:4){
+  for(j in c("CpG","CHG","CHH")) {
+    tmp_mods <- mods_list[[i]][mods_list[[i]]$CHROM == spikein & mods_list[[i]]$CONTEXT == j,]
+    tmp_sum$conversion[tmp_sum$methods == methods[i] & tmp_sum$context == j] <- mean(tmp_mods$MOD_LEVEL[(tmp_mods$MOD+tmp_mods$UNMOD)>=3])
+  }
+}
+
+df_unmodified <- tmp_sum
+knitr::kable(df_unmodified, digits = 5, caption = "Summary of unmodified spike in")
+```
+
+```{r}
+df_unmodified <- df_unmodified[df_unmodified$context == "CpG", c("methods","conversion")]
+write.table(df_unmodified, "false_positive_table.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+
+```
+
+
+```{r unmodified_CpG_only}
+spikein <- "unmodified_2kb"
+
+tmp_sum <- data.frame(methods = rep(methods, each = 1),
+                      conversion = NA)
+
+for(i in 1:4){
+    tmp_mods <- mods_list[[i]][mods_list[[i]]$CHROM == spikein & mods_list[[i]]$CONTEXT == "CpG",]
+    tmp_sum$conversion[i] <- mean(tmp_mods$MOD_LEVEL[(tmp_mods$MOD + tmp_mods$UNMOD) >= 3])
+      # sum(tmp_mods$MOD)/(sum(tmp_mods$MOD) +  sum(tmp_mods$UNMOD))
+}
+
+df_unmodified <- tmp_sum
+knitr::kable(df_unmodified, digits = 5, caption = "Summary of unmodified spike in")
+```
+
+
+# Conversion rate, false positive rate and mapping rate
+
+
+```{r N5mCNN results}
+N5mCNN_res <- read.csv("../../results/2020-07-26_spikein/synthetic_N5mCNN_results.csv", as.is = T)
+```
+
+
+## TAPS-beta
+
+N5mCNN: Top strand 0.948047631
+
+5mC: lambda 0.9676 (use this one; CpG)
+
+5hmC: N5mCNN bottom strand (CpG only)
+
+Unmodified: unmodified_2kb (both CpG and CH in one column)
+
+```{r tapsbeta_conversion_rate}
+df_plot <- data.frame(type = c("5mC","5hmC"),
+                      cr = c(df_lambda$conversion[df_lambda$methods == "TAPSbeta"],
+                             N5mCNN_res$Statistic[N5mCNN_res$Methods == "TAPSbeta" & 
+                                                    N5mCNN_res$Strand == "Bottom_strand"&
+                                                    N5mCNN_res$Value == "ratio_modified_CG"]))
+df_plot$type <- factor(df_plot$type, levels = c("5mC","5hmC"))
+
+ggplot(df_plot, aes(x = type, y = cr*100)) + geom_bar(stat = "identity", fill = "grey", col = "grey20") + 
+    geom_text(aes(label=round(cr * 100, 1)), vjust=-0.4) +
+  theme_light() + xlab("") + ylab("Fraction converted cytosines on CpGs (%)") + theme(axis.text = element_text(color = "black"))+ ylim(0,100)
+
+ggsave("plots/basic_statistics20200726/TAPSbeta_conversion.pdf",width = 2, height = 4)
+```
+
+
+```{r tapsbeta_Unmodified_rate}
+df_plot <- data.frame(type = c("Unmodified"),
+                      cr = c(df_unmodified$conversion[df_unmodified$methods == "TAPSbeta"]))
+
+ggplot(df_plot, aes(x = type, y = cr*100)) + geom_bar(stat = "identity", fill = "grey40", col = "grey20") + 
+    geom_text(aes(label=round(cr * 100, 2)), vjust=-0.4) +
+  theme_light() + xlab("") + ylab("False positive rate (%)") + theme(axis.text = element_text(color = "black")) +
+  ylim(c(0,1))
+
+ggsave("plots/basic_statistics20200726/TAPSbeta_unmofified_conversion.pdf",width = 1.4, height = 4)
+```
+
+## CAPS
+
+5mC: lambda (CpG)
+
+5hmC: N5mCNN bottom strand (CpG only)
+
+Unmodified: unmodified_2kb
+
+```{r caps_conversion_rate}
+df_plot <- data.frame(type = c("5mC","5hmC"),
+                      cr = c(df_lambda$conversion[df_lambda$methods == "CAPS"],
+                             N5mCNN_res$Statistic[N5mCNN_res$Methods == "CAPS" & 
+                                                    N5mCNN_res$Strand == "Bottom_strand"&
+                                                    N5mCNN_res$Value == "ratio_modified_CG"]))
+df_plot$type <- factor(df_plot$type, levels = c("5mC","5hmC"))
+
+ggplot(df_plot, aes(x = type, y = cr*100)) + geom_bar(stat = "identity", fill = "grey", col = "grey20") + 
+    geom_text(aes(label=round(cr * 100, 2)), vjust=-0.4) +
+  theme_light() + xlab("") + ylab("Fraction converted cytosines on CpGs (%)") + theme(axis.text = element_text(color = "black")) + ylim(0,100)
+
+ggsave("plots/basic_statistics20200726/CAPS_conversion.pdf",width = 2, height = 4)
+```
+
+
+```{r caps_Unmodified_rate}
+df_plot <- data.frame(type = c("Unmodified"),
+                      cr = c(df_unmodified$conversion[df_unmodified$methods == "CAPS"]))
+
+ggplot(df_plot, aes(x = type, y = cr*100)) + geom_bar(stat = "identity", fill = "grey40", col = "grey20") + 
+    geom_text(aes(label=round(cr * 100, 2)), vjust=-0.4) +
+  theme_light() + xlab("") + ylab("False positive rate (%)") + theme(axis.text = element_text(color = "black")) +
+  ylim(c(0,1))
+
+ggsave("plots/basic_statistics20200726/CAPS_unmofified_conversion.pdf",width = 1.4, height = 4)
+```
+
+## PS 
+
+5mC: lambda (CpG)
+
+5hmC: N5mCNN bottom strand (CpG only)
+
+fC: 144fc
+
+caC: 2kb_2
+
+Unmodified: unmodified_2kb
+
+
+```{r PS_conversion_rate}
+df_plot <- data.frame(type = c("5mC","5hmC","5fC","5caC"),
+                      cr = c(df_lambda$conversion[df_lambda$methods == "PS"],
+                             N5mCNN_res$Statistic[N5mCNN_res$Methods == "PS" & 
+                                                    N5mCNN_res$Strand == "Bottom_strand"&
+                                                    N5mCNN_res$Value == "ratio_modified_CG"],
+                             df_144fc$conversion_CpG[df_144fc$methods == "PS"],
+                             df_2kb2$conversion[df_2kb2$methods == "PS"]))
+df_plot$type <- factor(df_plot$type, levels = c("5mC","5hmC","5fC","5caC"))
+
+ggplot(df_plot, aes(x = type, y = cr*100)) + geom_bar(stat = "identity", fill = "grey", col = "grey20") + 
+    geom_text(aes(label=round(cr * 100, 2)), vjust=-0.4) +
+  theme_light() + xlab("") + ylab("Fraction converted cytosines on CpGs (%)") + theme(axis.text = element_text(color = "black")) + ylim(0,100)
+
+ggsave("plots/basic_statistics20200726/PS_conversion.pdf",width = 3.8, height = 4)
+```
+
+
+```{r PS_Unmodified_rate}
+df_plot <- data.frame(type = c("Unmodified"),
+                      cr = c(df_unmodified$conversion[df_unmodified$methods == "PS"]))
+
+ggplot(df_plot, aes(x = type, y = cr*100)) + geom_bar(stat = "identity", fill = "grey40", col = "grey20") + 
+    geom_text(aes(label=round(cr * 100, 2)), vjust=-0.4) +
+  theme_light() + xlab("") + ylab("False positive rate (%)") + theme(axis.text = element_text(color = "black")) +
+  ylim(c(0,1))
+
+ggsave("plots/basic_statistics20200726/PS_unmofified_conversion.pdf",width = 1.4, height = 4)
+```
+
+
+## PSc
+
+5mC: lambda (CpG)
+
+5hmC: N5mCNN bottom strand (CpG only)
+
+fC: 144fc
+
+caC: 2kb_2
+
+Unmodified: unmodified_2kb
+
+```{r PSc_conversion_rate}
+df_plot <- data.frame(type = c("5mC","5hmC","5fC","5caC"),
+                      cr = c(df_lambda$conversion[df_lambda$methods == "PSc"],
+                             N5mCNN_res$Statistic[N5mCNN_res$Methods == "PSc" & 
+                                                    N5mCNN_res$Strand == "Bottom_strand"&
+                                                    N5mCNN_res$Value == "ratio_modified_CG"],
+                             df_144fc$conversion_CpG[df_144fc$methods == "PSc"],
+                             df_2kb2$conversion[df_2kb2$methods == "PSc"]))
+df_plot$type <- factor(df_plot$type, levels = c("5mC","5hmC","5fC","5caC"))
+
+ggplot(df_plot, aes(x = type, y = cr*100)) + geom_bar(stat = "identity", fill = "grey", col = "grey20") + 
+    geom_text(aes(label=round(cr * 100, 3)), vjust=-0.4) +
+  theme_light() + xlab("") + ylab("Fraction converted cytosines on CpGs (%)") + theme(axis.text = element_text(color = "black")) + ylim(0,100)
+
+ggsave("plots/basic_statistics20200726/PSc_conversion.pdf",width = 3.8, height = 4)
+```
+
+
+```{r PSc_Unmodified_rate}
+df_plot <- data.frame(type = c("Unmodified"),
+                      cr = c(df_unmodified$conversion[df_unmodified$methods == "PSc"]))
+
+ggplot(df_plot, aes(x = type, y = cr*100)) + geom_bar(stat = "identity", fill = "grey40", col = "grey20") + 
+    geom_text(aes(label=round(cr * 100, 3)), vjust=-0.4) +
+  theme_light() + xlab("") + ylab("False positive rate (%)") + theme(axis.text = element_text(color = "black")) +
+  ylim(c(0,1))
+
+ggsave("plots/basic_statistics20200726/PSc_unmofified_conversion.pdf",width = 1.4, height = 4)
+```
+
+
+ 

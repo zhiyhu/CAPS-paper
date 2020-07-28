@@ -1,0 +1,18 @@
+fq_in_path: "data/fastq"
+trim_out_path: "data/trimmed"
+bwa_out_path: "data/bam"
+dedup_out_path: "data/dedup"
+
+MAPQ: "10"
+
+ref_genome: "ref/mm9_newspike/mm9_newspike.fa"
+vcf: "ref/E14_snv/E14_SNV.vcf.gz"
+maskRegion: "ref/mm9-blacklist.bed.gz"
+
+sampleList: ["YL708508f","YL709502c","YL711505m","YL712508hm"]
+CHRs: ["chr1","chr2","chr3","chr4","chr5","chr6","chr7","chr8","chr9","chr10","chr11","chr12","chr13","chr14","chr15","chr16","chr17","chr18","chr19","chrX","chrY"]
+contexts: ["CpG"]
+
+## Zhiyuan HU
+## 12 March 2020
+## last modified 7 May 2020
