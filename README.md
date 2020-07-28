@@ -5,15 +5,12 @@
 ## Folder structure
 
 **snake_pipeline/**
-
 * Snakemake pipeline to preprocessing the fastq files and generate methylation calling files
-
-The development version asTair-3.3.1 of astair was installed by `python -m pip install --user astair==3.3.1`.
+* The development version asTair-3.3.1 of astair was installed by `python -m pip install --user astair==3.3.1`.
 
 
 **analysis/**
-
-Statistical analysis and visualisation
+* Statistical analysis and visualisation
 
 
 ## Snakemake preprocessing pipeline
