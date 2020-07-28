@@ -23,13 +23,13 @@ if(os == "Darwin") { ## if run locally (mock run only with chr 2)
   fn_taps <- "../../data/nbt/GSM3454335_TAPS_mm9_CpG_blk_chr2.bed.gz"
   chrs <- "chr2"
 } else {
-  fn_taps <- "/home/obgynae/zyhu/projects/taps/analysis_caps/methy_data/taps_CpG_mods.bed.gz"
-  fn_beta <- "/home/obgynae/zyhu/projects/taps/analysis_caps/methy_data/tapsbeta_CpG_mods.bed.gz"
-  fn_caps <- "/home/obgynae/zyhu/projects/taps/analysis_caps/methy_data/caps_CpG_mods.bed.gz"
+  fn_taps <- "$HOME/projects/taps/analysis_caps/methy_data/taps_CpG_mods.bed.gz"
+  fn_beta <- "$HOME/projects/taps/analysis_caps/methy_data/tapsbeta_CpG_mods.bed.gz"
+  fn_caps <- "$HOME/projects/taps/analysis_caps/methy_data/caps_CpG_mods.bed.gz"
   chrs <- paste("chr", c(1:19, "X","Y"), sep = "")
-  fn_out <- c("/home/obgynae/zyhu/projects/taps/analysis_caps/tidy_data/mlml/tidy_taps_mlml.tsv.gz",
-              "/home/obgynae/zyhu/projects/taps/analysis_caps/tidy_data/mlml/tidy_tapsbeta_mlml.tsv.gz",
-              "/home/obgynae/zyhu/projects/taps/analysis_caps/tidy_data/mlml/tidy_caps_mlml.tsv.gz")
+  fn_out <- c("$HOME/projects/taps/analysis_caps/tidy_data/mlml/tidy_taps_mlml.tsv.gz",
+              "$HOME/projects/taps/analysis_caps/tidy_data/mlml/tidy_tapsbeta_mlml.tsv.gz",
+              "$HOME/projects/taps/analysis_caps/tidy_data/mlml/tidy_caps_mlml.tsv.gz")
 }
 
 ## the positions need to be match

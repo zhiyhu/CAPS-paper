@@ -191,45 +191,10 @@ if(os != "Darwin") {
 }
 
 
-
-## binomial test (disabled) -----
-## don't need 
-
-# fp_rate <- read.table("false_positive_table.txt", header = T, stringsAsFactors = F)
-# fp_rate <- rbind(fp_rate, c("TAPS", 0.0023)) # use 0.23% as TAPS's false postive rate
-# 
-# binom_t <- function(depth, mod, p) { # false positive rate/probability
-#   p_value <- mcmapply(as.numeric(mod), as.numeric(depth), 
-#                          FUN = function(x, y) {
-#                            if(!is.na(x) & !is.na(y)) {
-#                              if(y > 0) {
-#                                return(binom.test(x = x, n = y, p = p, alternative = "greater")$p.value)
-#                              } else {
-#                                return(1)
-#                              }
-#                            } else {
-#                              return(1)
-#                            }
-#                            
-#                          }, 
-#                          mc.cores = ncores)
-#   
-#   # p_adjusted <- p.adjust(p_value, method = "BH")
-#   return(p_value)
-# }
-
 print("sum(is.na(cpg_all$chr)) = ")
 sum(is.na(cpg_all$chr))
 
 cpg_all <- cpg_all[!is.na(cpg_all$chr),] ## remove NA rows
-
-# print("binomial test caps")
-# caps_fp <- as.numeric(fp_rate$conversion[fp_rate$methods == "CAPS"])
-# cpg_all$caps.p <- binom_t(depth = (cpg_all$caps.mod + cpg_all$caps.unmod), mod = cpg_all$caps.mod, p = caps_fp)
-# print("binomial test ace")
-# cpg_all$ace.p  <- binom_t(depth = (cpg_all$ace.mod + cpg_all$ace.unmod),  mod = cpg_all$ace.mod,  p = ace_fp)
-# print("binomial test tabseq")
-# cpg_all$tab.p  <- binom_t(depth = (cpg_all$tab.mod + cpg_all$tab.unmod),  mod = cpg_all$tab.mod,  p = tabseq_fp)
 
 cpg_all$caps.p <- 0
 cpg_all$ace.p  <- 0
@@ -267,106 +232,6 @@ tidy_data$tab.mod[tidy_data$tab.p > p_cutoff] <- 0
 
 if(os != "Darwin") {
   fwrite(tidy_data, "../tidy_data/5hmC_caps_mlml_ace_tab_mods.bed.gz", sep = "\t", row.names = F, col.names = T)
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-################################################################################################
-##################################### below is obsolete -------
-################################################################################################
-
-
-## caps vs tabseq vs ace -----
-
-idx <- which(cpg_all$caps.depth >= depth_cutoff &
-               cpg_all$ace.depth >= depth_cutoff &
-               cpg_all$tab.depth >= depth_cutoff)
-
-tidy_data <- cpg_all[idx, c("chr","start","end", "strand", "caps.mod", "caps.unmod", 
-                            "ace.mod", "ace.unmod","tab.mod" ,"tab.unmod", "caps.p", "ace.p","tab.p")]
-
-tidy_data$caps.mod2 <- tidy_data$caps.mod
-tidy_data$ace.mod2 <- tidy_data$ace.mod
-tidy_data$tab.mod2 <- tidy_data$tab.mod
-
-tidy_data$caps.mod[tidy_data$caps.p > 0.05] <- 0
-tidy_data$ace.mod[tidy_data$ace.p > 0.05] <- 0
-tidy_data$tab.mod[tidy_data$tab.p > 0.05] <- 0
-
-if(os != "Darwin") {
-  fwrite(tidy_data, "../tidy_data/5hmC_caps_ace_tab_mods.bed.gz", sep = "\t", row.names = F, col.names = F)
-}
-
-
-
-## mlml vs tabseq vs ace -----
-
-
-idx <- which(#cpg_all$mlml.depth >= depth_cutoff &
-               cpg_all$caps.depth >= depth_cutoff&
-               cpg_all$ace.depth >= depth_cutoff &
-               cpg_all$tab.depth >= depth_cutoff & 
-               cpg_all$mlml.conflicts == 0 & 
-               !is.na(cpg_all$mlml.conflicts) &
-               cpg_all$mlml.ph != "" & 
-               !is.na(cpg_all$ mlml.ph))
-
-tidy_data <- cpg_all[idx, c("chr","start","end", "strand", "mlml.mod", "mlml.unmod", 
-                            "ace.mod", "ace.unmod","tab.mod" ,"tab.unmod", "ace.p","tab.p")]
-
-tidy_data$ace.mod2 <- tidy_data$ace.mod
-tidy_data$tab.mod2 <- tidy_data$tab.mod
-
-tidy_data$ace.mod[tidy_data$ace.p > 0.05] <- 0
-tidy_data$tab.mod[tidy_data$tab.p > 0.05] <- 0
-
-if(os != "Darwin") {
-  fwrite(tidy_data, "../tidy_data/5hmC_tapsmlml_ace_tab_mods.bed.gz", sep = "\t", row.names = F, col.names = F)
-}
-
-### all four
-
-# depth_cutoff <- 3
-
-idx <- which(#cpg_all$mlml.depth >= depth_cutoff &
-    cpg_all$ace.depth >= depth_cutoff &
-    cpg_all$tab.depth >= depth_cutoff & 
-    cpg_all$mlml.conflicts == 0 & 
-    !is.na(cpg_all$mlml.conflicts) &
-    cpg_all$mlml.mod != "" & 
-    !is.na(cpg_all$mlml.mod))
-
-
-cpg_all$mlml.mod[is.na(cpg_all$mlml.mod)]
-
-tidy_data <- cpg_all[idx, c("chr","start","end", "strand", "caps.mod", "caps.unmod","mlml.mod", "mlml.unmod", 
-                            "ace.mod", "ace.unmod","tab.mod" ,"tab.unmod","caps.p", "ace.p","tab.p")]
-
-tidy_data$caps.mod2 <- tidy_data$caps.mod
-tidy_data$ace.mod2 <- tidy_data$ace.mod
-tidy_data$tab.mod2 <- tidy_data$tab.mod
-
-tidy_data$mlml.mod <- tidy_data$mlml.ph 
-tidy_data$mlml.unmod <- 1 - tidy_data$mlml.ph
-tidy_data$caps.mod[tidy_data$caps.p > 0.05] <- 0
-tidy_data$ace.mod[tidy_data$ace.p > 0.05] <- 0
-tidy_data$tab.mod[tidy_data$tab.p > 0.05] <- 0
-
-if(os != "Darwin") {
-  fwrite(tidy_data, "../tidy_data/5hmC_caps_tapsmlml_ace_tab_mods.bed.gz", sep = "\t", row.names = F, col.names = F)
 }
 
 

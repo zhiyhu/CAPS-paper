@@ -3,10 +3,6 @@
 #$ -cwd
 ## Specify a queue
 #$ -q batchq
-## The following two lines will send an email notification when the job is
-## Ended/Aborted/Suspended - Please replace "UserName" with your own username.
-#$ -M zyhu
-#$ -m aes
 
 
 ## module load bedtools/2.25.0

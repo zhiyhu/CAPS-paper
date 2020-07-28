@@ -3,10 +3,7 @@
 #$ -cwd
 ## Specify a queue
 #$ -q batchq
-## The following two lines will send an email notification when the job is
-## Ended/Aborted/Suspended - Please replace "UserName" with your own username.
-#$ -M zyhu
-#$ -m aes
+
 
 ## Zhiyuan Hu
 ## May 2020
@@ -16,7 +13,7 @@
 module load R/3.6.0-newgcc
 Rscript mlml_tapsbeta_preprocessing.R
 
-cd /home/obgynae/zyhu/projects/taps/analysis_caps/tidy_data/mlml/
+cd $HOME/projects/taps/analysis_caps/tidy_data/mlml/
 gzip -d tidy_tapsbeta_mlml.tsv.gz
 gzip -d tidy_taps_mlml.tsv.gz
 
@@ -27,7 +24,7 @@ gzip tidy_tapsbeta_mlml.tsv
 gzip tidy_taps_mlml.tsv
 
 ## preprocessing BS-seq file
-cd /home/obgynae/zyhu/projects/taps/benchmark/oxbs
+cd $HOME/projects/taps/benchmark/oxbs
 zcat GSM4194641_Control_gDNA_100ng.cov.gz | sort -k 1,1 -k2,2n - | gzip > GSM4194641_Control_gDNA_100ng_sorted.cov.gz
 
 ## mlml of BS-seq and TAB-seq

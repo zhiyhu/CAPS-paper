@@ -8,16 +8,16 @@ suppressPackageStartupMessages(library(parallel))
 library(MASS)
 suppressPackageStartupMessages(library(dplyr))
 
-fn_taps <- "/home/obgynae/zyhu/projects/taps/analysis_caps/methy_data/taps_CpG_mods.bed.gz"
-fn_beta <- "/home/obgynae/zyhu/projects/taps/analysis_caps/methy_data/tapsbeta_CpG_mods.bed.gz"
-fn_caps <- "/home/obgynae/zyhu/projects/taps/analysis_caps/methy_data/caps_CpG_mods.bed.gz"
+fn_taps <- "$HOME/projects/taps/analysis_caps/methy_data/taps_CpG_mods.bed.gz"
+fn_beta <- "$HOME/projects/taps/analysis_caps/methy_data/tapsbeta_CpG_mods.bed.gz"
+fn_caps <- "$HOME/projects/taps/analysis_caps/methy_data/caps_CpG_mods.bed.gz"
 
-fn_mod <- c("/home/obgynae/zyhu/projects/taps/analysis_caps/tidy_data/igv/taps_modlevel.bed.gz",
-            "/home/obgynae/zyhu/projects/taps/analysis_caps/tidy_data/igv/tapsbeta_modlevel.bed.gz",
-            "/home/obgynae/zyhu/projects/taps/analysis_caps/tidy_data/igv/caps_modlevel.bed.gz")
-fn_dep <- c("/home/obgynae/zyhu/projects/taps/analysis_caps/tidy_data/igv/taps_depth.bed.gz",
-            "/home/obgynae/zyhu/projects/taps/analysis_caps/tidy_data/igv/tapsbeta_depth.bed.gz",
-            "/home/obgynae/zyhu/projects/taps/analysis_caps/tidy_data/igv/caps_depth.bed.gz")
+fn_mod <- c("$HOME/projects/taps/analysis_caps/tidy_data/igv/taps_modlevel.bed.gz",
+            "$HOME/projects/taps/analysis_caps/tidy_data/igv/tapsbeta_modlevel.bed.gz",
+            "$HOME/projects/taps/analysis_caps/tidy_data/igv/caps_modlevel.bed.gz")
+fn_dep <- c("$HOME/projects/taps/analysis_caps/tidy_data/igv/taps_depth.bed.gz",
+            "$HOME/projects/taps/analysis_caps/tidy_data/igv/tapsbeta_depth.bed.gz",
+            "$HOME/projects/taps/analysis_caps/tidy_data/igv/caps_depth.bed.gz")
 ## the positions need to be match
 
 taps <- fread(fn_taps, stringsAsFactors = F, data.table = F, header = F, sep = "\t", verbose = T, nThread = 4)
@@ -68,11 +68,11 @@ fwrite(x = tidy_caps[,c(1:3,5)], fn_dep[3], sep = "\t", col.names = F, row.names
 
 ## get TAB-seq and ACE-seq dat
 
-fn <- "/home/obgynae/zyhu/projects/taps/analysis_caps/tidy_data/5hmC_caps_mlml_ace_tab_mods.unfiltered.bed.gz"
-fn_mod <- c("/home/obgynae/zyhu/projects/taps/analysis_caps/tidy_data/igv/tabseq_modlevel.bed.gz",
-            "/home/obgynae/zyhu/projects/taps/analysis_caps/tidy_data/igv/tabseq_depth.bed.gz",
-            "/home/obgynae/zyhu/projects/taps/analysis_caps/tidy_data/igv/ace_modlevel.bed.gz",
-            "/home/obgynae/zyhu/projects/taps/analysis_caps/tidy_data/igv/ace_depth.bed.gz")
+fn <- "$HOME/projects/taps/analysis_caps/tidy_data/5hmC_caps_mlml_ace_tab_mods.unfiltered.bed.gz"
+fn_mod <- c("$HOME/projects/taps/analysis_caps/tidy_data/igv/tabseq_modlevel.bed.gz",
+            "$HOME/projects/taps/analysis_caps/tidy_data/igv/tabseq_depth.bed.gz",
+            "$HOME/projects/taps/analysis_caps/tidy_data/igv/ace_modlevel.bed.gz",
+            "$HOME/projects/taps/analysis_caps/tidy_data/igv/ace_depth.bed.gz")
 
 mod <- fread(fn, stringsAsFactors = F, data.table = F, header = T, sep = "\t", verbose = T, nThread = 4)
 
@@ -94,46 +94,4 @@ ace$modlevel <- ace$ace.mod/ace$depth
 
 fwrite(x = ace[,c("chr","start","end","modlevel")], fn_mod[3], sep = "\t", col.names = F, row.names = F)
 fwrite(x = ace[,c("chr","start","end","depth")], fn_mod[4], sep = "\t", col.names = F, row.names = F)
-
-##############################################################
-## extact positions where three methods captured high methylation
-
-mod$caps.depth <- mod$caps.unmod + mod$caps.mod
-mod$ace.depth <- mod$ace.unmod + mod$ace.mod
-mod$tab.depth <- mod$tab.unmod + mod$tab.mod
-
-mod <- mod[mod$caps.depth >=3 &
-             mod$ace.depth >= 3 &
-             mod$tab.depth >= 3, ]
-
-mod$caps.modlevel <- mod$caps.mod / mod$caps.depth
-mod$ace.modlevel  <- mod$ace.mod  / mod$ace.depth
-mod$tab.modlevel  <- mod$tab.mod  / mod$tab.depth
-
-
-sum(mod$caps.modlevel > 0.2 &
-      mod$ace.modlevel> 0.2 &
-      mod$tab.modlevel> 0.2)
-# 5157
-
-sum(mod$caps.modlevel > 0.3 &
-      mod$ace.modlevel> 0.3 &
-      mod$tab.modlevel> 0.3)
-# 322
-
-sum(mod$caps.modlevel > 0.4 &
-      mod$ace.modlevel> 0.4 &
-      mod$tab.modlevel> 0.4)
-# 9
-
-fwrite(mod[mod$caps.modlevel > 0.4 &
-             mod$ace.modlevel> 0.4 &
-             mod$tab.modlevel> 0.4,1:4],"/home/obgynae/zyhu/projects/taps/analysis_caps/tidy_data/igv/5hmc_caps_ace_tab_sites_0.4.bed.gz", sep = "\t", col.names = T, row.names = F)
-
-
-fwrite(mod[mod$caps.modlevel > 0.3 &
-             mod$ace.modlevel> 0.3 &
-             mod$tab.modlevel> 0.3,1:4],"/home/obgynae/zyhu/projects/taps/analysis_caps/tidy_data/igv/5hmc_caps_ace_tab_sites_0.3.bed.gz", sep = "\t", col.names = T, row.names = F)
-
-
 

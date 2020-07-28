@@ -194,29 +194,3 @@ ggsave("plots/genomic_element20200628/genomic_element_5hmC_piechart.pdf", width 
 if(os != "Darwin") {
   write.table(df_summary, "plots/genomic_element20200628/genomic_element_5hmC_piechart_data.txt", row.names = F, col.names = T, sep = "\t", quote = F )
 }
-
-
-
-#### boxplot: distribution
-
-# caps_all$mod_level <- as.numeric(caps_all$mod_level)
-# df_quantile <- aggregate(mod_level~status, data = caps_all[caps_all$caps.p <= p_cutoff,], FUN = summary)
-# df_quantile <- as.data.frame(df_quantile)
-# df_summary <- df_quantile$mod_level 
-# colnames(df_summary) <- gsub(pattern = "[.]", replacement = "", x = colnames(df_summary))
-# df_summary <- data.frame(df_summary)
-# df_summary$status <- df_quantile$status
-# df_summary$status <- factor(df_summary$status, levels = c("Active_Promoter", "Poised_Promoter","Strong_Enhancer","Poised_Enhancer","Txn_Transition","Txn_Elongation","Weak_Txn","Insulator","Repressed","Heterochrom"))
-# 
-# ggplot(df_summary, aes(x = status, ymin = Min, lower = X1st.Qu, middle = Median, upper = X3rd.Qu, ymax = Max)) +
-#   geom_boxplot(stat = "identity") + theme_linedraw() +
-#   theme(text = element_text(size = 12, colour = "black"),
-#         axis.text.x = element_text(angle = 20, vjust = 0.8, hjust = 0.8, size = 12))   + 
-#   xlab("") + ylab("Modification level of high-confidence CpGs")
-# ggsave("plots/genomic_element20200520/genomic_element_5hmC_distribution_boxplot.pdf", width = 10, height = 6)
-# 
-# 
-# if(os != "Darwin") {
-#   write.table(df_summary, "plots/genomic_element20200520/genomic_element_5hmC_distribution_boxplot_data.txt", row.names = F, col.names = T, sep = "\t", quote = F )
-# }
-
