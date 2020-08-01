@@ -7,11 +7,8 @@
 library(data.table)
 library(parallel)
 
-depth_cutoff <- 0
-p_cutoff <- 0.001
-tabseq_fp <- 0.0222 ## TAB-seq false positive rate
-ace_fp <- 0.0047 ## ACE-seq false positive rate
-ncores <- 8
+
+## output file: ../tidy_data/5hmC_caps_mlml_ace_tab_mods.bed.gz 
 
 ## set up ----
 sysinf <- Sys.info()
@@ -21,28 +18,17 @@ if (!is.null(sysinf)){
   os <- "No"
 }
 
-if(os == "Darwin") { ## if run locally (mock run only with chr 2)
-  fn_cpg  <- "../../data/mm9_newspike_CpG_chr2.bed.gz"
-  fn_caps <- "../../data/caps/YL712508hm_dedup_chrselected_mCtoT_CpG_masked_chr2.mods.gz"
-  fn_ace  <- "../../data/ace/GSE116016_ACE-Seq_WT.ESC.mm9_CG_chr2.txt.gz"
-  fn_mlml <- "../../data/mlml_output/taps_tapsbeta_mlml_output_chr2.tsv.gz"
-  fn_taps <- "../../data/data_for_mlml/tidy_taps_mlml_chr2.tsv.gz"
-  fn_beta <- "../../data/data_for_mlml/tidy_tapsbeta_mlml_chr2.tsv.gz"
-  fn_tab  <- "../../data/tabseq/tabseq_bismark_bt2_dedup2_sorted.bismark_chr2.cov.gz"
-  chrs <- "chr2"
-} else {
-  fn_cpg  <- "/home/obgynae/zyhu/projects/taps/analysis_caps/methy_data/mm9_CpG_sites.bed.gz"
-  fn_caps <- "/home/obgynae/zyhu/projects/taps/analysis_caps/methy_data/caps_CpG_mods.bed.gz"
-  fn_ace  <- "/home/obgynae/zyhu/projects/taps/analysis_caps/methy_data/ace_CpG_mods.bed.gz"
-  fn_mlml <- "/home/obgynae/zyhu/projects/taps/analysis_caps/methy_data/taps_tapsbeta_mlml_CpG_mods.bed.gz"
-  fn_taps <- "/home/obgynae/zyhu/projects/taps/analysis_caps/methy_data/taps_CpG_mods.bed.gz"
-  fn_beta <- "/home/obgynae/zyhu/projects/taps/analysis_caps/methy_data/tapsbeta_CpG_mods.bed.gz"
-  fn_tab  <- "/home/obgynae/zyhu/projects/taps/analysis_caps/methy_data/tabseq_CpG_mods.bed.gz"
+fn_cpg  <- "$HOME/projects/taps/analysis_caps/methy_data/mm9_CpG_sites.bed.gz"
+fn_caps <- "$HOME/projects/taps/analysis_caps/methy_data/caps_CpG_mods.bed.gz"
+fn_ace  <- "$HOME/projects/taps/analysis_caps/methy_data/ace_CpG_mods.bed.gz"
+fn_mlml <- "$HOME/projects/taps/analysis_caps/methy_data/taps_tapsbeta_mlml_CpG_mods.bed.gz"
+fn_taps <- "$HOME/projects/taps/analysis_caps/methy_data/taps_CpG_mods.bed.gz"
+fn_beta <- "$HOME/projects/taps/analysis_caps/methy_data/tapsbeta_CpG_mods.bed.gz"
+fn_tab  <- "$HOME/projects/taps/analysis_caps/methy_data/tabseq_CpG_mods.bed.gz"
 chrs <- paste("chr", c(1:19, "X","Y"), sep = "")
-}
 
 
-##################### part 1 -----------------
+##################### part 1 read in files and merge -----------------
 
 ## CpG list ----
 print("reading cpg")
@@ -80,7 +66,6 @@ for(itor in chrs){
 }
 
 cpg_all <- tmp
-# cpg_all$caps.depth <- cpg_all$caps.mod + cpg_all$caps.unmod
 
 rm(caps, caps_all, tmp)
 gc()
@@ -196,15 +181,8 @@ sum(is.na(cpg_all$chr))
 
 cpg_all <- cpg_all[!is.na(cpg_all$chr),] ## remove NA rows
 
-cpg_all$caps.p <- 0
-cpg_all$ace.p  <- 0
-cpg_all$tab.p  <- 0
+fwrite(cpg_all, "../tidy_data/5hmC_caps_mlml_ace_tab_mods_binomial_tested.unfiltered.bed.gz", sep = "\t", row.names = F, col.names = T)
 
-if(os != "Darwin") {
-  fwrite(cpg_all, "../tidy_data/5hmC_caps_mlml_ace_tab_mods_binomial_tested.unfiltered.bed.gz", sep = "\t", row.names = F, col.names = T)
-} else {
-  fwrite(cpg_all, "../../data/tidy_data/5hmC_caps_mlml_ace_tab_mods_binomial_tested.unfiltered_chr2.bed.gz", sep = "\t", row.names = F, col.names = F)
-}
 
 
 ####################### part 2: clean up the columns ----
@@ -225,15 +203,8 @@ tidy_data$mlml.unmod <- 1 - tidy_data$mlml.ph
 tidy_data$mlml.unmod[tidy_data$mlml.conflicts >= 1] <- 0
 
 
-## remove binomial with p > 0.01
-tidy_data$caps.mod[tidy_data$caps.p > p_cutoff] <- 0
-tidy_data$ace.mod[tidy_data$ace.p > p_cutoff] <- 0
-tidy_data$tab.mod[tidy_data$tab.p > p_cutoff] <- 0
 
-if(os != "Darwin") {
-  fwrite(tidy_data, "../tidy_data/5hmC_caps_mlml_ace_tab_mods.bed.gz", sep = "\t", row.names = F, col.names = T)
-}
+fwrite(tidy_data, "../tidy_data/5hmC_caps_mlml_ace_tab_mods.bed.gz", sep = "\t", row.names = F, col.names = T)
 
 
-sessionInfo()
 

@@ -18,19 +18,14 @@ if (!is.null(sysinf)){
 
 ## TAPS, TAPSbeta, CAPS -----
 
-if(os == "Darwin") { ## if run locally (mock run only with chr 2)
-  fn_beta <- "../../data/caps/YL712508hm_dedup_chrselected_mCtoT_CpG_masked_chr2.mods.gz"
-  fn_taps <- "../../data/nbt/GSM3454335_TAPS_mm9_CpG_blk_chr2.bed.gz"
-  chrs <- "chr2"
-} else {
-  fn_taps <- "$HOME/projects/taps/analysis_caps/methy_data/taps_CpG_mods.bed.gz"
-  fn_beta <- "$HOME/projects/taps/analysis_caps/methy_data/tapsbeta_CpG_mods.bed.gz"
-  fn_caps <- "$HOME/projects/taps/analysis_caps/methy_data/caps_CpG_mods.bed.gz"
-  chrs <- paste("chr", c(1:19, "X","Y"), sep = "")
-  fn_out <- c("$HOME/projects/taps/analysis_caps/tidy_data/mlml/tidy_taps_mlml.tsv.gz",
+fn_taps <- "$HOME/projects/taps/analysis_caps/methy_data/taps_CpG_mods.bed.gz"
+fn_beta <- "$HOME/projects/taps/analysis_caps/methy_data/tapsbeta_CpG_mods.bed.gz"
+fn_caps <- "$HOME/projects/taps/analysis_caps/methy_data/caps_CpG_mods.bed.gz"
+chrs <- paste("chr", c(1:19, "X","Y"), sep = "")
+fn_out <- c("$HOME/projects/taps/analysis_caps/tidy_data/mlml/tidy_taps_mlml.tsv.gz",
               "$HOME/projects/taps/analysis_caps/tidy_data/mlml/tidy_tapsbeta_mlml.tsv.gz",
               "$HOME/projects/taps/analysis_caps/tidy_data/mlml/tidy_caps_mlml.tsv.gz")
-}
+
 
 ## the positions need to be match
 
@@ -88,15 +83,15 @@ if(os != "Darwin") {
 }
 
 
-## BS, oxBS and TAB-seq -----
+## BS, ACE-seq and TAB-seq -----
 
-fn_wgbs <- "/home/obgynae/zyhu/projects/taps/analysis_caps/methy_data/wgbs_CpG_mods.bed.gz"
-fn_ace <- "/home/obgynae/zyhu/projects/taps/analysis_caps/methy_data/ace_CpG_mods_noheader.bed.gz"
-fn_tab <- "/home/obgynae/zyhu/projects/taps/analysis_caps/methy_data/tabseq_CpG_mods.bed.gz"
+fn_wgbs <- "$HOME/projects/taps/analysis_caps/methy_data/wgbs_CpG_mods.bed.gz"
+fn_ace <- "$HOME/projects/taps/analysis_caps/methy_data/ace_CpG_mods_noheader.bed.gz"
+fn_tab <- "$HOME/projects/taps/analysis_caps/methy_data/tabseq_CpG_mods.bed.gz"
 chrs <- paste("chr", c(1:19, "X","Y"), sep = "")
-fn_out <- c("/home/obgynae/zyhu/projects/taps/analysis_caps/tidy_data/mlml/tidy_wgbs_mlml.tsv.gz",
-            "/home/obgynae/zyhu/projects/taps/analysis_caps/tidy_data/mlml/tidy_ace_mlml.tsv.gz",
-            "/home/obgynae/zyhu/projects/taps/analysis_caps/tidy_data/mlml/tidy_tabseq_mlml.tsv.gz")
+fn_out <- c("$HOME/projects/taps/analysis_caps/tidy_data/mlml/tidy_wgbs_mlml.tsv.gz",
+            "$HOME/projects/taps/analysis_caps/tidy_data/mlml/tidy_ace_mlml.tsv.gz",
+            "$HOME/projects/taps/analysis_caps/tidy_data/mlml/tidy_tabseq_mlml.tsv.gz")
 
 ## the positions need to be match
 
@@ -147,8 +142,6 @@ tidy_ace <- tidy_ace[order(tidy_ace$chr, tidy_ace$pos),]
 tidy_tab  <- tidy_tab [order(tidy_tab$chr, tidy_tab$pos),]
 
 
-if(os != "Darwin") {
-  fwrite(x = tidy_wgbs, fn_out[1], sep = "\t", col.names = F)
-  fwrite(x = tidy_ace, fn_out[2], sep = "\t", col.names = F)
-  fwrite(x = tidy_tab, fn_out[3], sep = "\t", col.names = F)
-}
+fwrite(x = tidy_wgbs, fn_out[1], sep = "\t", col.names = F)
+fwrite(x = tidy_ace, fn_out[2], sep = "\t", col.names = F)
+fwrite(x = tidy_tab, fn_out[3], sep = "\t", col.names = F)

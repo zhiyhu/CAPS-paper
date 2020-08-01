@@ -33,7 +33,6 @@ out=${dir}/caps_CpG_mods_annotated.bed.gz
 bedtools intersect -sorted -wo -a $beda -b $bedb | gzip > $out
 
 ## run R script
-
 module load R/3.6.0-newgcc
 
 Rscript $HOME/projects/taps/analysis_caps/R/caps_genomic_element_analysis.R 2>&1 | \

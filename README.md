@@ -50,11 +50,13 @@
 **Files:** 
 * analysis/caps_HPLC_boxplot.R (Figure S2)
 
+
 ### TAPS-beta analysis
 
 **Files:**
 1. analysis/tapsbeta_5mc_benchmarking_taps_oxbs.R (remote)
 1. analysis/tapsbeta_5mc_benchmark_runr.sh (remote): to run the above Rscript
+
 
 ### CAPS: benchmarking analysis
 
@@ -65,11 +67,13 @@
 1. analysis/caps_analysis_bin_chrs.sh: bedtools map to count Ts and Cs in 10-kb bins
 1. analysis/caps_analysis_benchmarking.R (local)
 
+
 ### CAPS: CpG islands coverage analysis
 
 **Files:**
-* analysis/CpG_island_analysis.sh
-* analysis/CpG_island_analysis.R
+1. analysis/CpG_island_prepare_bins.R
+1. analysis/CpG_island_analysis.sh
+1. analysis/CpG_island_analysis.R
 
 
 ### Ternary plot
@@ -79,14 +83,15 @@
 1. analysis/tenary_mlml.sh
 1. analysis/ternary_diagram.R (local)
 
+
 ### IGV visualisation 
 
 **Files:**
 1. analysis/igv_mod2bed.R: astair output to bedgraph
 1. analysis/igv_bed2bw.sh: bedgraph to bigwig
 
-### CAPS: Colocolization analysis with genomic regulatory elements
 
+### CAPS: Colocolization analysis with genomic regulatory elements
 
 **Files:**
 1. analysis/caps_genomic_element_analysis.R - part 1 (commanded out)

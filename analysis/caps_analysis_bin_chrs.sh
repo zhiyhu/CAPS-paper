@@ -10,6 +10,7 @@
 ## 24 Apr 2020
 ## last modified 26 july 2020
 
+## output file: tidy_data/bins_out/5hmC_caps_mlml_ace_tab_mods_10kb_bin.bed.gz
 
 module load bedtools/2.25.0
 module load R/3.6.0-newgcc

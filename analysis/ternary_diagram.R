@@ -7,6 +7,7 @@
 
 
 ### ternary plot
+## output: plots/ternary_plot20200705
 
 
 library('Ternary')

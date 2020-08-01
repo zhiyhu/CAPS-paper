@@ -1,10 +1,3 @@
-#!/bin/sh
-## The following to run programs in the current working directory
-#$ -cwd
-## Specify a queue
-#$ -q batchq
-
-
 module load R/3.6.0-newgcc
 
 ####################

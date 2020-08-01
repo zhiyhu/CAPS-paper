@@ -5,6 +5,8 @@
 ## last modified: 26 July 2020
 ## ran remotely
 
+## Output: plots/genomic_element20200628
+
 library(data.table)
 library(parallel)
 suppressPackageStartupMessages(library(dplyr))

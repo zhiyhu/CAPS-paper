@@ -7,40 +7,17 @@
 
 library(data.table)
 
-## set up ----
-sysinf <- Sys.info()
-if (!is.null(sysinf)){
-  os <- sysinf['sysname']
-} else {
-  os <- "No"
-}
-
-if(os == "Darwin") { ## if run locally (mock run only with chr 2)
-  chrs <- "chr2"
-  fn <- c(#"../../data/TAB14/GSM1180306_TAB-Seq.mESC.WT.biorep1.techrep1_chr2.tab", ## TABseq
-          #"../../data/TAB14/GSM1180307_TAB-Seq.mESC_WT.biorep1.techrep2_chr2.tab",
-          #"../../data/TAB14/GSM1180308_TAB-Seq.mESC_WT.biorep2.techrep1_chr2.tab",
-          "../../data/mm9_newspike_CpG_chr2.bed.gz") ## cpg sites
-  fn_beta <- "../../data/astair_out_mapq20/YL711505m_dedup_mCtoT_chr2_CpG_masked.mods.gz"## TAPS beta
-  fn_oxbs <- c("../../data/oxBS/GSM4194645_oxBS_100ng_1_sorted_chr2.cov",
-               "../../data/oxBS/GSM4194646_oxBS_100ng_2_sorted_chr2.cov",
-               "../../data/oxBS/GSM4194647_oxBS_100ng_3_sorted_chr2.cov")
+chrs <- paste("chr", c(1:19, "X","Y"), sep = "") # chrs
+dir <- "$HOME/projects/taps/"
   
-  fn_bs <- c("../../data/nbt/GSM3071998_WGBS_mm9_CpG_blk_chr2.bed.gz")
-  
-} else { # run on server
-  
-  chrs <- paste("chr", c(1:19, "X","Y"), sep = "") # chrs
-  dir <- "/home/obgynae/zyhu/projects/taps/"
-  
-  fn_cpg <-  paste(dir, "analysis_caps/methy_data/mm9_CpG_sites.bed.gz", sep = "") ## cpg sites
-  fn_beta <- paste(dir, "analysis_caps/methy_data/tapsbeta_CpG_mods.bed.gz", sep = "") # TAPS-beta file
-  fn_oxbs <- paste(dir, "analysis_caps/methy_data/oxbs_",
+fn_cpg <-  paste(dir, "analysis_caps/methy_data/mm9_CpG_sites.bed.gz", sep = "") ## cpg sites
+fn_beta <- paste(dir, "analysis_caps/methy_data/tapsbeta_CpG_mods.bed.gz", sep = "") # TAPS-beta file
+fn_oxbs <- paste(dir, "analysis_caps/methy_data/oxbs_",
                    c(1:3), "_CpG_mods.bed.gz", sep = "")
 
-  fn <- c(fn_cpg)
-  fn_out <- "/home/obgynae/zyhu/projects/taps/analysis_caps/tidy_data/5mC_tapsbeta_oxbs_mods.bed.gz"
-}
+fn <- c(fn_cpg)
+fn_out <- "$HOME/projects/taps/analysis_caps/tidy_data/5mC_tapsbeta_oxbs_mods.bed.gz"
+
 
 
 ## CpG list ----
@@ -220,29 +197,3 @@ write.csv(df_res, "plots/5mc_tapsbeta_benchmark20200627/correlation_result_depth
 pdf("plots/5mc_tapsbeta_benchmark20200627/smoothScatter_tapsbeta_oxbs_depth10.pdf")
 smoothScatter(x = merged_new$oxbs_level,  y = merged_new$beta_level, xlab = "oxBS 5mC level", ylab = "TAPS-beta 5mC level")
 dev.off()
-
-## depth = 5
-depth_cutoff <- 5
-
-merged_new <- merged_keep 
-
-merged_new <- merged_new[(merged_new$beta.mod + merged_new$beta.unmod) >= depth_cutoff & 
-                           (merged_new$oxbs.mod + merged_new$oxbs.unmod) >= depth_cutoff,]
-
-merged_new$beta_level <- merged_new$beta.mod/(merged_new$beta.mod + merged_new$beta.unmod)
-merged_new$oxbs_level <- merged_new$oxbs.mod/(merged_new$oxbs.mod + merged_new$oxbs.unmod)
-
-df_res <- data.frame(assay1 = "oxBS",
-                     assay2 = "TAPS-beta",
-                     pearson_cor = cor(merged_new$beta_level, merged_new$oxbs_level),
-                     spearman_cor = cor(merged_new$beta_level, merged_new$oxbs_level, method = "spearman"),
-                     CpG_sites_used = nrow(merged_new))
-
-write.csv(df_res, "plots/5mc_tapsbeta_benchmark20200627/correlation_result_depth5.csv")
-
-pdf("plots/5mc_tapsbeta_benchmark20200627/smoothScatter_tapsbeta_oxbs_depth5.pdf")
-smoothScatter(x = merged_new$oxbs_level,  y = merged_new$beta_level, xlab = "oxBS 5mC level", ylab = "TAPS-beta 5mC level")
-dev.off()
-
-
-sessionInfo()
