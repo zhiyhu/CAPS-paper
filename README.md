@@ -40,10 +40,11 @@
 
 **Files:**
 * analysis/spikein_analysis.Rmd (local)
-* analysis/spikein_analysis.html (local)
 
 
 ### Visualise chemical results
+
+Related to Figure S2a, b
 
 **Descriptions:** Plot the HPLC results
 
@@ -51,7 +52,9 @@
 * analysis/caps_HPLC_boxplot.R (Figure S2)
 
 
-### TAPS-beta analysis
+### TAPS-beta analysis 
+
+Related to figure 1d
 
 **Files:**
 1. analysis/tapsbeta_5mc_benchmarking_taps_oxbs.R (remote)
@@ -59,6 +62,8 @@
 
 
 ### CAPS: benchmarking analysis
+
+Related to figure 2e
 
 **Files:** 
 1. analysis/mlml_tapsbeta_preprocessing.R
@@ -70,6 +75,8 @@
 
 ### CAPS: CpG islands coverage analysis
 
+Related to figure S4
+
 **Files:**
 1. analysis/CpG_island_prepare_bins.R
 1. analysis/CpG_island_analysis.sh
@@ -77,6 +84,8 @@
 
 
 ### Ternary plot
+
+Related to figure 3a
 
 **Files:**
 1. analysis/tenary_preprocessing.R 
@@ -86,12 +95,16 @@
 
 ### IGV visualisation 
 
+Related to figure 3b and S5
+
 **Files:**
 1. analysis/igv_mod2bed.R: astair output to bedgraph
 1. analysis/igv_bed2bw.sh: bedgraph to bigwig
 
 
 ### CAPS: Colocolization analysis with genomic regulatory elements
+
+Related to figure 3c, d
 
 **Files:**
 1. analysis/caps_genomic_element_analysis.R - part 1 (commanded out)
