@@ -75,7 +75,7 @@ Related to figure 2e
 
 ### CAPS: CpG islands coverage analysis
 
-Related to figure S4
+Related to figure S5
 
 **Files:**
 1. analysis/CpG_island_prepare_bins.R
@@ -95,7 +95,7 @@ Related to figure 3a
 
 ### IGV visualisation 
 
-Related to figure 3b and S5
+Related to figure 3b and S6
 
 **Files:**
 1. analysis/igv_mod2bed.R: astair output to bedgraph
