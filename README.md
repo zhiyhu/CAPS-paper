@@ -112,6 +112,15 @@ Related to figure 3c, d
 1. analysis/caps_genomic_element_analysis.R - part 2
 
 
+### PS analysis
+
+Related to figure 4f,g and figure S7,8
+
+**Files:**
+1. ps_broadpeak_final.sh: methylation signal around histone modification peaks
+1. ps_hmm_dts_final.sh: methylation signal in predicted genomic elements
+1. ps_astair2bw.sh: for IGV visualisation
+
 ## Session info
 
 #### Server enviroment
