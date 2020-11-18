@@ -2,6 +2,7 @@
 # preprocessing data for the ternary plot
 # Zhiyuan Hu
 # 4 july 2020
+# last modified 18 Nov 2020
 
 library(data.table)
 suppressPackageStartupMessages(library(parallel))
@@ -16,7 +17,9 @@ if (!is.null(sysinf)){
   os <- "No"
 }
 
-## TAPS, TAPSbeta, CAPS -----
+#---------------------------#
+#  TAPS, TAPSbeta, CAPS     #
+#---------------------------#
 
 fn_taps <- "$HOME/projects/taps/analysis_caps/methy_data/taps_CpG_mods.bed.gz"
 fn_beta <- "$HOME/projects/taps/analysis_caps/methy_data/tapsbeta_CpG_mods.bed.gz"
@@ -25,7 +28,6 @@ chrs <- paste("chr", c(1:19, "X","Y"), sep = "")
 fn_out <- c("$HOME/projects/taps/analysis_caps/tidy_data/mlml/tidy_taps_mlml.tsv.gz",
               "$HOME/projects/taps/analysis_caps/tidy_data/mlml/tidy_tapsbeta_mlml.tsv.gz",
               "$HOME/projects/taps/analysis_caps/tidy_data/mlml/tidy_caps_mlml.tsv.gz")
-
 
 ## the positions need to be match
 

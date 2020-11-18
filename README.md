@@ -83,14 +83,14 @@ Related to figure S4
 1. analysis/CpG_island_analysis.R
 
 
-### Ternary plot
+### Subtraction analysis
 
 Related to figure 3a
 
 **Files:**
-1. analysis/tenary_preprocessing.R 
-1. analysis/tenary_mlml.sh
-1. analysis/ternary_diagram.R (local)
+1. analysis/subtraction_preprocessing.R 
+1. analysis/subtraction_mlml.sh
+1. analysis/subtraction_diagram.R (local)
 
 
 ### IGV visualisation 
