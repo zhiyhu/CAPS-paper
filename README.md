@@ -1,5 +1,18 @@
-# CAPS-paper
- 
+# Code and Script for CAPS paper
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4321048.svg)](https://doi.org/10.5281/zenodo.4321048)
+
+Authors: Yibin Liu,<sup>1,2,5*</sup> Zhiyuan Hu,<sup>3,4,*</sup> Jingfei Cheng,<sup>1,2</sup> Paulina Siejka-Zielińska,<sup>1,2</sup> Jinfeng Chen,<sup>1,2</sup> Masato Inoue,<sup>1,2</sup> Ahmed Ashour Ahmed,<sup>3,4</sup> Chun-Xiao Song<sup>1,2,†</sup>  
+Affiliations:  
+1 Ludwig Institute for Cancer Research, Nufﬁeld Department of Medicine, University of Oxford, Oxford OX3 7FZ, UK  
+2 Target Discovery Institute, Nufﬁeld Department of Medicine, University of Oxford, Oxford OX3 7FZ, UK  
+3 Ovarian Cancer Cell Laboratory, MRC Weatherall Institute of Molecular Medicine, University of Oxford, Oxford OX3 9DS, UK  
+4 Nuffield Department of Women’s & Reproductive Health, University of Oxford, Oxford OX3 9DU, UK  
+5 Present address: Exact Sciences Innovation, Innovation Building, Oxford OX3 7FZ, UK  
+*These authors contributed equally to this work.  
+†Corresponding author. Email: chunxiao.song@ludwig.ox.ac.uk  
+
+
 ## Citation
 
 ## Folder structure
@@ -123,7 +136,7 @@ Related to figure 4f,g and figure S7,8
 
 ## Session info
 
-#### Server enviroment
+### Server enviroment
 
 ```
 R version 3.6.0 (2019-04-26)
