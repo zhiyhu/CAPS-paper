@@ -1,4 +1,4 @@
-# Code and Script for CAPS paper
+# Subtraction-free and bisulfite-free specific sequencing of 5-methylcytosine and its oxidized derivatives at base resolution
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4321048.svg)](https://doi.org/10.5281/zenodo.4321048)
 
