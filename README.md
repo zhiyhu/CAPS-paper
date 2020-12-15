@@ -15,124 +15,96 @@ Affiliations:
 
 ## Citation
 
-## Folder structure
+## Folder Structure
 
 **snake_pipeline/**
 * Snakemake pipeline to preprocessing the fastq files and generate methylation calling files
 * The development version asTair-3.3.1 of astair was installed by `python -m pip install --user astair==3.3.1`.
 
-
 **analysis/**
 * Statistical analysis and visualisation
 
-
-## Snakemake preprocessing pipeline
+## Data Preprocessing: Snakemake Workflow
 
 **Description:**
-* Preprocessing TAPS-beta, CAPS, PS-c and PS.
+* Preprocessing TAPS&beta;, CAPS, PS and PS-c. 
+* Reading in fastq files and generated methylation calling results.
 * `asTair vesion: 3.3.1` used
 
 **Files:**
 * snake_pipeline/
 
-**Steps:**
-* Trimming
+**Steps included:**
+* Trim reads
 * Alignment (bwa mem)
 * Call methylation sites on spikein
-* Deduplicating
-* Clipping overlap
+* Deduplicate
+* Clip overlap
 * Call methylation sites on mm9 genome (SNV excl.)
 * Mask artifact-prone regions
 * [QC] Phred visualisation
-* [QC] Counting reads before and after trimming, alignment and deduplicationg
+* [QC] Counting reads before and after trimming, alignment and deduplication
 
 
-## Analysis
+## Downstream Analysis
+
+The following analysis was aimed to summarise and visualise the methylation calling results. I listed the scripts correpsonding to the analysis.
 
 ### Spike-in analysis
 
-**Files:**
-* analysis/spikein_analysis.Rmd (local)
+1. analysis/spikein_analysis.Rmd (local)
+
+### Visualise chemical results (related to Figure S3a, b)
+
+1. analysis/caps_HPLC_boxplot.R: plot the HPLC results
 
 
-### Visualise chemical results
+### TAPS&beta; analysis (related to Figure 1d, e)
 
-Related to Figure S2a, b
-
-**Descriptions:** Plot the HPLC results
-
-**Files:** 
-* analysis/caps_HPLC_boxplot.R (Figure S2)
-
-
-### TAPS-beta analysis 
-
-Related to figure 1d
-
-**Files:**
 1. analysis/tapsbeta_5mc_benchmarking_taps_oxbs.R (remote)
 1. analysis/tapsbeta_5mc_benchmark_runr.sh (remote): to run the above Rscript
 
 
-### CAPS: benchmarking analysis
+### CAPS: benchmarking analysis (related to Figure 2e,f)
 
-Related to figure 2e
-
-**Files:** 
 1. analysis/mlml_tapsbeta_preprocessing.R
 1. analysis/mlml.sh (run preprocessing R script and run MLML)
 1. analysis/caps_analysis_preprocessing.R (ran by caps_analysis_bin_chrs.sh): preprocessing CAPS data, mlml results, ACE data and TABseq data.
 1. analysis/caps_analysis_bin_chrs.sh: bedtools map to count Ts and Cs in 10-kb bins
 1. analysis/caps_analysis_benchmarking.R (local)
 
+### CAPS: CpG islands coverage analysis (related to Figure S6)
 
-### CAPS: CpG islands coverage analysis
-
-Related to figure S5
-
-**Files:**
 1. analysis/CpG_island_prepare_bins.R
 1. analysis/CpG_island_analysis.sh
 1. analysis/CpG_island_analysis.R
 
 
-### Subtraction analysis
+### Subtraction analysis (related to Figure 3a)
 
-Related to figure 3a
-
-**Files:**
 1. analysis/subtraction_preprocessing.R 
 1. analysis/subtraction_mlml.sh
 1. analysis/subtraction_diagram.R (local)
 
 
-### IGV visualisation 
+### IGV visualisation (related to Figure 3b, S7)
 
-Related to figure 3b and S6
-
-**Files:**
 1. analysis/igv_mod2bed.R: astair output to bedgraph
 1. analysis/igv_bed2bw.sh: bedgraph to bigwig
 
 
-### CAPS: Colocolization analysis with genomic regulatory elements
+### CAPS: Colocolization analysis with genomic regulatory elements (related to Figure 3c, d)
 
-Related to figure 3c, d
-
-**Files:**
 1. analysis/caps_genomic_element_analysis.R - part 1 (commanded out)
 1. analysis/caps_genomic_element_analysis.sh (remotely)
 1. analysis/caps_genomic_element_analysis.R - part 2
 
+### PS analysis (related to Figure 4f,4g,S8,9)
 
-### PS analysis
-
-Related to figure 4f,g and figure S7,8
-
-**Files:**
 1. ps_broadpeak_final.sh: methylation signal around histone modification peaks
 1. ps_hmm_dts_final.sh: methylation signal in predicted genomic elements
 1. ps_astair2bw.sh: for IGV visualisation
+
 
 ## Session info
 
@@ -172,7 +144,7 @@ loaded via a namespace (and not attached):
 [21] tidyselect_0.2.5 gridExtra_2.3    tibble_2.1.3    
 ```
 
-#### Local enviroment
+### Local enviroment
 
 ```
 R version 3.6.2 (2019-12-12)
