@@ -15,28 +15,19 @@ Affiliations:
 
 ## Citation
 
-## Folder Structure
-
-**snake_pipeline/**
-* Snakemake pipeline to preprocessing the fastq files and generate methylation calling files
-* The development version asTair-3.3.1 of astair was installed by `python -m pip install --user astair==3.3.1`.
-
-**analysis/**
-* Statistical analysis and visualisation
+To be updated soon.
 
 ## Data Preprocessing: Snakemake Workflow
 
 **Description:**
 * Preprocessing TAPS&beta;, CAPS, PS and PS-c. 
-* Reading in fastq files and generated methylation calling results.
-* `asTair vesion: 3.3.1` used
-
-**Files:**
-* snake_pipeline/
+* Located in the directory `snake_pipeline/`.
+* Snakemake pipeline to preprocessing the fastq files and generate methylation calling results.
+* `asTair vesion: 3.3.1` used. The development version asTair-3.3.1 of astair was installed by `python -m pip install --user astair==3.3.1`.
 
 **Steps included:**
 * Trim reads
-* Alignment (bwa mem)
+* Alignment by bwa mem
 * Call methylation sites on spikein
 * Deduplicate
 * Clip overlap
@@ -48,7 +39,7 @@ Affiliations:
 
 ## Downstream Analysis
 
-The following analysis was aimed to summarise and visualise the methylation calling results. I listed the scripts correpsonding to the analysis.
+The following analysis was aimed to conduct statistical analysis, summarise and visualise the methylation calling results. I listed the scripts correpsonding to the analysis. It is located in the directory `analysis/`.
 
 ### Spike-in analysis
 
@@ -68,7 +59,7 @@ The following analysis was aimed to summarise and visualise the methylation call
 ### CAPS: benchmarking analysis (related to Figure 2e,f)
 
 1. analysis/mlml_tapsbeta_preprocessing.R
-1. analysis/mlml.sh (run preprocessing R script and run MLML)
+1. analysis/mlml.sh: run preprocessing R script and run MLML
 1. analysis/caps_analysis_preprocessing.R (ran by caps_analysis_bin_chrs.sh): preprocessing CAPS data, mlml results, ACE data and TABseq data.
 1. analysis/caps_analysis_bin_chrs.sh: bedtools map to count Ts and Cs in 10-kb bins
 1. analysis/caps_analysis_benchmarking.R (local)
@@ -101,9 +92,9 @@ The following analysis was aimed to summarise and visualise the methylation call
 
 ### PS analysis (related to Figure 4f,4g,S8,9)
 
-1. ps_broadpeak_final.sh: methylation signal around histone modification peaks
-1. ps_hmm_dts_final.sh: methylation signal in predicted genomic elements
-1. ps_astair2bw.sh: for IGV visualisation
+1. analysis/ps_broadpeak_final.sh: methylation signal around histone modification peaks
+1. analysis/ps_hmm_dts_final.sh: methylation signal in predicted genomic elements
+1. analysis/ps_astair2bw.sh: for IGV visualisation
 
 
 ## Session info
