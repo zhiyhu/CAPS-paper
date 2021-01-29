@@ -15,7 +15,7 @@ Affiliations:
 
 ## Citation
 
-To be updated soon.
+Liu, Y., Hu, Z., Cheng, J. et al. Subtraction-free and bisulfite-free specific sequencing of 5-methylcytosine and its oxidized derivatives at base resolution. *Nat Commun* 12, 618 (2021). https://doi.org/10.1038/s41467-021-20920-2
 
 ## Data Preprocessing: Snakemake Workflow
 
